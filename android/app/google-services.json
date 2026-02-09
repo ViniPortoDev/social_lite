@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "338811456599",
+    "project_id": "phone-validation-app",
+    "storage_bucket": "phone-validation-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338811456599:android:26c9b677d702e9ebd6e712",
+        "android_client_info": {
+          "package_name": "com.example.phone_validation_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABO1mdNRFDvoCT__VrwlUIpru3zPAzwVs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
