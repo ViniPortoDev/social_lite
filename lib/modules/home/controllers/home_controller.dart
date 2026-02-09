@@ -80,20 +80,35 @@ class HomeController extends GetxController {
       isLoading.value = true;
 
       final results = await Future.wait([
-        api.fetchPosts(limit: 20),
+        api.fetchPosts(limit: 100),
         api.fetchUsers(),
         api.fetchComments(limit: 20),
         api.fetchPhotos(limit: 50),
       ]);
 
-      final fetchedPosts = results[0] as List<PostModel>;
+      final allPosts = results[0] as List<PostModel>;
       final users = results[1] as List<UserModel>;
       final comments = results[2] as List<CommentModel>;
       final photos = results[3] as List<PhotoModel>;
 
-      posts.assignAll(fetchedPosts);
+      final byUser = <int, List<PostModel>>{};
+      for (final p in allPosts) {
+        (byUser[p.userId] ??= <PostModel>[]).add(p);
+      }
 
-      if (fetchedPosts.isEmpty || users.isEmpty || photos.isEmpty) {
+      final selectedPosts = <PostModel>[];
+      for (final u in users) {
+        final list = byUser[u.id];
+        if (list == null || list.isEmpty) continue;
+        selectedPosts.addAll(list.take(2));
+      }
+      if (selectedPosts.isEmpty) {
+        selectedPosts.addAll(allPosts.take(20));
+      }
+
+      posts.assignAll(selectedPosts);
+
+      if (selectedPosts.isEmpty || users.isEmpty || photos.isEmpty) {
         feed.clear();
         return;
       }
@@ -115,7 +130,7 @@ class HomeController extends GetxController {
         return photos[idx];
       }
 
-      final items = fetchedPosts
+      final items = selectedPosts
           .map((p) {
             final u =
                 userById[p.userId] ?? users[(p.userId - 1) % users.length];
@@ -153,7 +168,6 @@ class HomeController extends GetxController {
 
   Future<void> testImmediateNotification() async {
     await notificationService.showNewData(newCount: posts.length);
-    Get.snackbar('Notificação enviada!', 'Verifique a barra de notificações');
   }
 
   Future<void> testScheduledNotification() async {

@@ -30,11 +30,7 @@ class HomeView extends GetView<HomeController> {
               tooltip: 'Sair',
             );
           }),
-          IconButton.filledTonal(
-            onPressed: controller.fetchFeed,
-            icon: const Icon(Icons.refresh_rounded),
-            tooltip: 'Atualizar feed',
-          ),
+
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert_rounded),
             onSelected: (value) {

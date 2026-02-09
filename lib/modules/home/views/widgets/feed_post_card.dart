@@ -22,6 +22,10 @@ class FeedPostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final comments = item.comments.take(2).toList(growable: false);
+    final fallbackProfileUrl =
+        'https://picsum.photos/seed/profile-${item.user.id}/150/150';
+    final fallbackPostUrl =
+        'https://picsum.photos/seed/post-${item.post.id}/800/800';
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -48,13 +52,30 @@ class FeedPostCard extends StatelessWidget {
                       color: scheme.primary,
                     ),
                   ),
-                  errorWidget: (context, url, error) => CircleAvatar(
-                    radius: 18,
-                    backgroundColor: scheme.surfaceContainerHighest,
-                    child: Icon(
-                      Icons.person_off_outlined,
-                      size: 18,
-                      color: scheme.onSurfaceVariant,
+                  errorWidget: (context, url, error) => CachedNetworkImage(
+                    imageUrl: fallbackProfileUrl,
+                    imageBuilder: (context, provider) => CircleAvatar(
+                      radius: 18,
+                      backgroundColor: scheme.primary.withValues(alpha: 0.12),
+                      backgroundImage: provider,
+                    ),
+                    placeholder: (context, url) => CircleAvatar(
+                      radius: 18,
+                      backgroundColor: scheme.primary.withValues(alpha: 0.12),
+                      child: Icon(
+                        Icons.person_rounded,
+                        size: 18,
+                        color: scheme.primary,
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => CircleAvatar(
+                      radius: 18,
+                      backgroundColor: scheme.surfaceContainerHighest,
+                      child: Icon(
+                        Icons.person_off_outlined,
+                        size: 18,
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 ),
@@ -91,12 +112,20 @@ class FeedPostCard extends StatelessWidget {
                 color: scheme.surfaceContainerHighest,
                 child: const Center(child: CircularProgressIndicator()),
               ),
-              errorWidget: (context, url, error) => Container(
-                color: scheme.surfaceContainerHighest,
-                child: Icon(
-                  Icons.broken_image_outlined,
-                  color: scheme.onSurfaceVariant,
-                  size: 32,
+              errorWidget: (context, url, error) => CachedNetworkImage(
+                imageUrl: fallbackPostUrl,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
+                  color: scheme.surfaceContainerHighest,
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  color: scheme.surfaceContainerHighest,
+                  child: Icon(
+                    Icons.broken_image_outlined,
+                    color: scheme.onSurfaceVariant,
+                    size: 32,
+                  ),
                 ),
               ),
             ),
@@ -118,11 +147,7 @@ class FeedPostCard extends StatelessWidget {
                       ),
                       tooltip: 'Curtir',
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.mode_comment_outlined),
-                      tooltip: 'Comentar',
-                    ),
+
                     const Spacer(),
                     IconButton(
                       onPressed: onToggleSave,
