@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
+import 'widgets/feed_post_card.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -10,7 +11,7 @@ class HomeView extends GetView<HomeController> {
     final scheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Posts'),
+        title: const Text('Feed'),
         actions: [
           Obx(() {
             final busy = controller.isLoggingOut.value;
@@ -30,9 +31,9 @@ class HomeView extends GetView<HomeController> {
             );
           }),
           IconButton.filledTonal(
-            onPressed: controller.fetchPosts,
+            onPressed: controller.fetchFeed,
             icon: const Icon(Icons.refresh_rounded),
-            tooltip: 'Atualizar posts',
+            tooltip: 'Atualizar feed',
           ),
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert_rounded),
@@ -72,11 +73,11 @@ class HomeView extends GetView<HomeController> {
         ],
       ),
       body: Obx(() {
-        if (controller.isLoading.value && controller.posts.isEmpty) {
+        if (controller.isLoading.value && controller.feed.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (controller.posts.isEmpty) {
+        if (controller.feed.isEmpty) {
           return Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
@@ -90,8 +91,9 @@ class HomeView extends GetView<HomeController> {
                       children: [
                         CircleAvatar(
                           radius: 26,
-                          backgroundColor:
-                              scheme.primary.withValues(alpha: 0.12),
+                          backgroundColor: scheme.primary.withValues(
+                            alpha: 0.12,
+                          ),
                           child: Icon(
                             Icons.inbox_outlined,
                             color: scheme.primary,
@@ -100,25 +102,21 @@ class HomeView extends GetView<HomeController> {
                         const SizedBox(height: 14),
                         Text(
                           'Nada por aqui',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
+                          style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.w800),
                         ),
                         const SizedBox(height: 6),
                         Text(
                           'Puxe para atualizar ou toque em “Atualizar”.',
                           textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
+                          style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: scheme.onSurfaceVariant),
                         ),
                         const SizedBox(height: 14),
                         SizedBox(
                           width: double.infinity,
                           child: FilledButton.icon(
-                            onPressed: controller.fetchPosts,
+                            onPressed: controller.fetchFeed,
                             icon: const Icon(Icons.refresh_rounded),
                             label: const Text('Atualizar'),
                           ),
@@ -133,31 +131,20 @@ class HomeView extends GetView<HomeController> {
         }
 
         return RefreshIndicator(
-          onRefresh: controller.fetchPosts,
+          onRefresh: controller.fetchFeed,
           child: ListView.separated(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
-            itemCount: controller.posts.length,
+            itemCount: controller.feed.length,
             separatorBuilder: (_, __) => const SizedBox(height: 8),
             itemBuilder: (context, i) {
-              final p = controller.posts[i];
-              return Card(
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: scheme.primary.withValues(alpha: 0.12),
-                    child: Text(
-                      '${p.id}',
-                      style: TextStyle(
-                        color: scheme.primary,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                  title: Text(p.title),
-                  subtitle: Text(
-                    p.body,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+              final item = controller.feed[i];
+              return Obx(
+                () => FeedPostCard(
+                  item: item,
+                  liked: controller.isLiked(item.post.id),
+                  saved: controller.isSaved(item.post.id),
+                  onToggleLike: () => controller.toggleLike(item.post.id),
+                  onToggleSave: () => controller.toggleSave(item.post.id),
                 ),
               );
             },

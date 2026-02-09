@@ -3,7 +3,11 @@ import '../../../core/ui/dialogs/app_dialogs.dart';
 import '../../../core/services/local_notification_service.dart';
 import '../../../routes/app_routes.dart';
 import '../../../core/services/auth_service.dart';
+import '../models/comment_model.dart';
+import '../models/feed_post_model.dart';
+import '../models/photo_model.dart';
 import '../models/post_model.dart';
+import '../models/user_model.dart';
 import '../services/jsonplaceholder_service.dart';
 
 class HomeController extends GetxController {
@@ -22,11 +26,34 @@ class HomeController extends GetxController {
   final isLoading = false.obs;
   final isLoggingOut = false.obs;
   final posts = <PostModel>[].obs;
+  final feed = <FeedPostModel>[].obs;
+
+  final _likedPostIds = <int>{}.obs;
+  final _savedPostIds = <int>{}.obs;
+
+  bool isLiked(int postId) => _likedPostIds.contains(postId);
+  bool isSaved(int postId) => _savedPostIds.contains(postId);
+
+  void toggleLike(int postId) {
+    if (_likedPostIds.contains(postId)) {
+      _likedPostIds.remove(postId);
+    } else {
+      _likedPostIds.add(postId);
+    }
+  }
+
+  void toggleSave(int postId) {
+    if (_savedPostIds.contains(postId)) {
+      _savedPostIds.remove(postId);
+    } else {
+      _savedPostIds.add(postId);
+    }
+  }
 
   @override
   void onReady() {
     super.onReady();
-    fetchPosts();
+    fetchFeed();
   }
 
   Future<void> fetchPosts() async {
@@ -42,6 +69,82 @@ class HomeController extends GetxController {
       dialog.showError(
         title: 'Erro ao carregar',
         message: 'Não foi possível buscar os posts agora. Tente novamente.',
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchFeed() async {
+    try {
+      isLoading.value = true;
+
+      final results = await Future.wait([
+        api.fetchPosts(limit: 20),
+        api.fetchUsers(),
+        api.fetchComments(limit: 20),
+        api.fetchPhotos(limit: 50),
+      ]);
+
+      final fetchedPosts = results[0] as List<PostModel>;
+      final users = results[1] as List<UserModel>;
+      final comments = results[2] as List<CommentModel>;
+      final photos = results[3] as List<PhotoModel>;
+
+      posts.assignAll(fetchedPosts);
+
+      if (fetchedPosts.isEmpty || users.isEmpty || photos.isEmpty) {
+        feed.clear();
+        return;
+      }
+
+      final userById = {for (final u in users) u.id: u};
+
+      final commentsByPostId = <int, List<CommentModel>>{};
+      for (final c in comments) {
+        (commentsByPostId[c.postId] ??= <CommentModel>[]).add(c);
+      }
+
+      PhotoModel pickPostPhoto(int postId) {
+        final idx = (postId - 1) % photos.length;
+        return photos[idx];
+      }
+
+      PhotoModel pickProfilePhoto(int userId) {
+        final idx = (userId - 1) % photos.length;
+        return photos[idx];
+      }
+
+      final items = fetchedPosts
+          .map((p) {
+            final u =
+                userById[p.userId] ?? users[(p.userId - 1) % users.length];
+            final postPhoto = pickPostPhoto(p.id);
+            final profilePhoto = pickProfilePhoto(u.id);
+            final postComments =
+                commentsByPostId[p.id] ?? const <CommentModel>[];
+
+            return FeedPostModel(
+              post: p,
+              user: u,
+              profilePhoto: profilePhoto,
+              postPhoto: postPhoto,
+              comments: postComments,
+            );
+          })
+          .toList(growable: false);
+
+      feed.assignAll(items);
+
+      if (items.isNotEmpty) {
+        await notificationService.init();
+        await notificationService.showNewData(newCount: items.length);
+      }
+    } catch (e) {
+      dialog.showError(
+        title: 'Erro ao carregar',
+        message:
+            'Não foi possível montar o feed agora. Verifique sua conexão e tente novamente.',
       );
     } finally {
       isLoading.value = false;
