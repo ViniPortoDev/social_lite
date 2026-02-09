@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import '../../../core/ui/dialog_service.dart';
 import '../controllers/auth_controller.dart';
 import '../services/auth_service.dart';
 
@@ -8,6 +9,12 @@ class AuthBinding extends Bindings {
   void dependencies() {
     Get.lazyPut(() => FirebaseAuth.instance);
     Get.lazyPut(() => AuthService(Get.find<FirebaseAuth>()));
-    Get.lazyPut(() => AuthController(authService: Get.find<AuthService>()));
+    Get.lazyPut(
+      () => AuthController(
+        authService: Get.find<AuthService>(),
+        dialog: Get.find<DialogService>(),
+      ),
+    );
+    Get.lazyPut(() => DialogService());
   }
 }

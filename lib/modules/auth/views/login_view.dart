@@ -63,6 +63,17 @@ class _LoginViewState extends State<LoginView> {
             }),
             const SizedBox(height: 12),
             Obx(() {
+              return SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: c.isLoading.value ? null : c.loginWithGoogle,
+                  child: const Text('Entrar com Google'),
+                ),
+              );
+            }),
+
+            const SizedBox(height: 12),
+            Obx(() {
               final err = c.error.value;
               if (err == null) return const SizedBox.shrink();
               return Text(err, style: const TextStyle(color: Colors.red));
