@@ -15,7 +15,7 @@ class _RegisterViewState extends State<RegisterView> {
   final cpfMask = MaskTextInputFormatter(mask: '###.###.###-##');
   final birthMask = MaskTextInputFormatter(mask: '##/##/####');
 
-  final c = Get.find<RegisterController>();
+  final controller = Get.find<RegisterController>();
 
   final nameCtrl = TextEditingController();
   final phoneCtrl = TextEditingController();
@@ -87,9 +87,9 @@ class _RegisterViewState extends State<RegisterView> {
               () => SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: c.isLoading.value
+                  onPressed: controller.isLoading.value
                       ? null
-                      : () => c.register(
+                      : () => controller.register(
                           name: nameCtrl.text,
                           phone: phoneCtrl.text,
                           cpf: cpfCtrl.text,
@@ -97,7 +97,7 @@ class _RegisterViewState extends State<RegisterView> {
                           email: emailCtrl.text,
                           password: passCtrl.text,
                         ),
-                  child: c.isLoading.value
+                  child: controller.isLoading.value
                       ? const SizedBox(
                           height: 18,
                           width: 18,

@@ -11,9 +11,58 @@ class HomeView extends GetView<HomeController> {
       appBar: AppBar(
         title: const Text('Posts'),
         actions: [
+          Obx(() {
+            final busy = controller.isLoggingOut.value;
+            return IconButton(
+              onPressed: busy ? null : controller.logout,
+              icon: busy
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.logout),
+              tooltip: 'Sair',
+            );
+          }),
           IconButton(
             onPressed: controller.fetchPosts,
             icon: const Icon(Icons.refresh),
+            tooltip: 'Atualizar posts',
+          ),
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              switch (value) {
+                case 'immediate':
+                  controller.testImmediateNotification();
+                  break;
+                case 'scheduled':
+                  controller.testScheduledNotification();
+                  break;
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'immediate',
+                child: Row(
+                  children: [
+                    Icon(Icons.notifications_active),
+                    SizedBox(width: 8),
+                    Text('Notificação Imediata'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'scheduled',
+                child: Row(
+                  children: [
+                    Icon(Icons.schedule),
+                    SizedBox(width: 8),
+                    Text('Agendar em 10s'),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),

@@ -1,15 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import '../../../core/errors/firebase_auth_error_mapper.dart';
-import '../../../core/ui/dialog_service.dart';
+import '../../../core/services/auth_service.dart';
+import '../../../core/ui/dialogs/app_dialogs.dart';
 import '../../../routes/app_routes.dart';
-import '../services/auth_service.dart';
 
 class AuthController extends GetxController {
   AuthController({required this.authService, required this.dialog});
 
   final AuthService authService;
-  final DialogService dialog;
+  final AppDialogs dialog;
 
   final isLoading = false.obs;
 
@@ -61,4 +61,18 @@ class AuthController extends GetxController {
     }
   }
 
+  Future<void> logout() async {
+    try {
+      isLoading.value = true;
+      await authService.signOut();
+      Get.offAllNamed(Routes.splash);
+    } catch (e) {
+      dialog.showError(
+        title: 'Erro ao sair',
+        message: 'Não foi possível sair agora. Tente novamente.',
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

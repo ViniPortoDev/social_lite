@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../routes/app_routes.dart';
 
 import '../routes/app_pages.dart';
+import 'bindings/app_binding.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -13,6 +14,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: Routes.splash,
       getPages: AppPages.routes,
+      initialBinding: AppBinding(),
     );
   }
 }

@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import '../../../core/errors/firebase_auth_error_mapper.dart';
-import '../../../core/ui/dialog_service.dart';
+import '../../../core/services/auth_service.dart';
+import '../../../core/ui/dialogs/app_dialogs.dart';
 import '../../../routes/app_routes.dart';
-import '../services/auth_service.dart';
 import '../services/user_db_service.dart';
 
 class RegisterController extends GetxController {
@@ -15,7 +15,7 @@ class RegisterController extends GetxController {
 
   final AuthService authService;
   final UserDbService userDb;
-  final DialogService dialog;
+  final AppDialogs dialog;
 
   final isLoading = false.obs;
 
@@ -76,6 +76,11 @@ class RegisterController extends GetxController {
         createdAt: DateTime.now(),
       );
 
+      isLoading.value = false;
+      await dialog.showSuccess(
+        title: 'Conta criada',
+        message: 'Sua conta foi criada com sucesso.',
+      );
       Get.offAllNamed(Routes.home);
     } on FirebaseAuthException catch (e) {
       dialog.showError(

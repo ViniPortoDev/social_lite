@@ -27,9 +27,7 @@ class AuthService {
     final String? idToken = googleAuth.idToken;
 
     if (idToken == null) {
-      throw Exception(
-        'idToken nulo (confira SHA-1/SHA-256 e google-services.json)',
-      );
+      throw Exception('idToken nulo');
     }
 
     final credential = GoogleAuthProvider.credential(idToken: idToken);

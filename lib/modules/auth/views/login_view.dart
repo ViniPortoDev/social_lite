@@ -11,7 +11,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final c = Get.find<AuthController>();
+  final controller = Get.find<AuthController>();
   final emailCtrl = TextEditingController();
   final passCtrl = TextEditingController();
 
@@ -46,13 +46,13 @@ class _LoginViewState extends State<LoginView> {
               return SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: c.isLoading.value
+                  onPressed: controller.isLoading.value
                       ? null
-                      : () => c.loginWithEmail(
+                      : () => controller.loginWithEmail(
                           email: emailCtrl.text,
                           password: passCtrl.text,
                         ),
-                  child: c.isLoading.value
+                  child: controller.isLoading.value
                       ? const SizedBox(
                           height: 18,
                           width: 18,
@@ -67,7 +67,9 @@ class _LoginViewState extends State<LoginView> {
               return SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: c.isLoading.value ? null : c.loginWithGoogle,
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : controller.loginWithGoogle,
                   child: const Text('Entrar com Google'),
                 ),
               );

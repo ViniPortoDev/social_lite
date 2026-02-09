@@ -1,8 +1,18 @@
 import 'package:get/get.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:phone_validation_app/core/ui/dialogs/app_dialogs.dart';
 import '../../../routes/app_routes.dart';
+import '../../../core/services/local_notification_service.dart';
+import '../../../core/services/auth_service.dart';
 
 class SplashController extends GetxController {
+  SplashController({
+    required this.dialog,
+    required this.authService,
+    required this.notificationService,
+  });
+  final AppDialogs dialog;
+  final AuthService authService;
+  final LocalNotificationService notificationService;
   final isLoading = true.obs;
   final error = RxnString();
 
@@ -19,7 +29,9 @@ class SplashController extends GetxController {
       error.value = null;
       isLoading.value = true;
 
-      final user = FirebaseAuth.instance.currentUser;
+      await notificationService.init();
+
+      final user = authService.currentUser;
 
       await Future.delayed(const Duration(milliseconds: 150));
 
@@ -29,7 +41,7 @@ class SplashController extends GetxController {
         Get.offAllNamed(Routes.home);
       }
     } catch (e) {
-      error.value = 'Falha ao iniciar: $e';
+      error.value = 'Houve um erro ao iniciar o aplicativo. Tente novamente.';
     } finally {
       isLoading.value = false;
     }

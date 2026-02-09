@@ -9,8 +9,8 @@ class JsonPlaceholderService {
   static const _baseUrl = 'https://jsonplaceholder.typicode.com';
 
   Future<List<PostModel>> fetchPosts() async {
-    final resp = await _dio.get('$_baseUrl/posts');
-    final data = resp.data;
+    final response = await _dio.get('$_baseUrl/posts');
+    final data = response.data;
 
     if (data is! List) {
       throw Exception('Resposta inesperada da API.');

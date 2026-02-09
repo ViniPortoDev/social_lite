@@ -8,6 +8,13 @@ class HomeBinding extends Bindings {
   void dependencies() {
     Get.lazyPut(() => Dio());
     Get.lazyPut(() => JsonPlaceholderService(Get.find<Dio>()));
-    Get.lazyPut(() => HomeController(api: Get.find<JsonPlaceholderService>()));
+    Get.lazyPut(
+      () => HomeController(
+        api: Get.find<JsonPlaceholderService>(),
+        notificationService: Get.find(),
+        dialog: Get.find(),
+        authService: Get.find(),
+      ),
+    );
   }
 }
