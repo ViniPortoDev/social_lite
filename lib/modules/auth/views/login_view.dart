@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../routes/app_routes.dart';
 import '../controllers/auth_controller.dart';
 
 class LoginView extends StatefulWidget {
@@ -71,13 +72,10 @@ class _LoginViewState extends State<LoginView> {
                 ),
               );
             }),
-
-            const SizedBox(height: 12),
-            Obx(() {
-              final err = c.error.value;
-              if (err == null) return const SizedBox.shrink();
-              return Text(err, style: const TextStyle(color: Colors.red));
-            }),
+            TextButton(
+              onPressed: () => Get.toNamed(Routes.register),
+              child: const Text('Criar conta'),
+            ),
           ],
         ),
       ),

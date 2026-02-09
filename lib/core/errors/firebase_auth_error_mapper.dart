@@ -9,6 +9,8 @@ class FirebaseAuthErrorMapper {
       case 'wrong-password':
       case 'invalid-credential':
         return 'Credenciais inválidas';
+      case 'email-already-in-use':
+        return 'Email já cadastrado';
       case 'too-many-requests':
         return 'Muitas tentativas';
       case 'network-request-failed':
@@ -27,6 +29,8 @@ class FirebaseAuthErrorMapper {
       case 'wrong-password':
       case 'invalid-credential':
         return 'Email ou senha incorretos.';
+      case 'email-already-in-use':
+        return 'Já existe uma conta com esse email. Tente fazer login ou use outro email.';
       case 'user-disabled':
         return 'Essa conta foi desativada.';
       case 'too-many-requests':

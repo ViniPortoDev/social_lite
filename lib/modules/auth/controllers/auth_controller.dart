@@ -12,7 +12,6 @@ class AuthController extends GetxController {
   final DialogService dialog;
 
   final isLoading = false.obs;
-  final error = RxnString();
 
   Future<void> loginWithGoogle() async {
     try {
@@ -39,7 +38,6 @@ class AuthController extends GetxController {
     required String password,
   }) async {
     try {
-      error.value = null;
       isLoading.value = true;
 
       await authService.signInWithEmail(
@@ -62,4 +60,5 @@ class AuthController extends GetxController {
       isLoading.value = false;
     }
   }
+
 }
