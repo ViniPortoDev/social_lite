@@ -37,12 +37,30 @@ class AuthController extends GetxController {
     required String email,
     required String password,
   }) async {
+    final e = email.trim();
+    final pass = password;
+
+    if (e.isEmpty || pass.isEmpty) {
+      dialog.showError(
+        title: 'Dados incompletos',
+        message: 'Informe email e senha para continuar.',
+      );
+      return;
+    }
+    if (!GetUtils.isEmail(e)) {
+      dialog.showError(
+        title: 'Email inválido',
+        message: 'Digite um email válido para continuar.',
+      );
+      return;
+    }
+
     try {
       isLoading.value = true;
 
       await authService.signInWithEmail(
-        email: email.trim(),
-        password: password,
+        email: e,
+        password: pass,
       );
 
       Get.offAllNamed(Routes.home);

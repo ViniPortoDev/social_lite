@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import '../../../core/validators/input_validators.dart';
 import '../../../core/errors/firebase_auth_error_mapper.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/ui/dialogs/app_dialogs.dart';
@@ -46,6 +47,46 @@ class RegisterController extends GetxController {
       );
       return;
     }
+
+    if (n.length < 3) {
+      dialog.showError(
+        title: 'Nome inválido',
+        message: 'Informe seu nome completo.',
+      );
+      return;
+    }
+
+    if (!InputValidators.isValidBrPhone(p)) {
+      dialog.showError(
+        title: 'Telefone inválido',
+        message: 'Digite um telefone válido com DDD.',
+      );
+      return;
+    }
+
+    if (!InputValidators.isValidCpf(c)) {
+      dialog.showError(
+        title: 'CPF inválido',
+        message: 'Digite um CPF válido.',
+      );
+      return;
+    }
+
+    if (InputValidators.parseBrazilDate(b) == null) {
+      dialog.showError(
+        title: 'Data inválida',
+        message: 'Digite uma data válida no formato dd/MM/aaaa.',
+      );
+      return;
+    }
+
+    if (!InputValidators.isValidEmail(e)) {
+      dialog.showError(
+        title: 'Email inválido',
+        message: 'Digite um email válido para continuar.',
+      );
+      return;
+    }
     if (pass.length < 6) {
       dialog.showError(
         title: 'Senha fraca',
@@ -76,7 +117,6 @@ class RegisterController extends GetxController {
         createdAt: DateTime.now(),
       );
 
-      isLoading.value = false;
       await dialog.showSuccess(
         title: 'Conta criada',
         message: 'Sua conta foi criada com sucesso.',
