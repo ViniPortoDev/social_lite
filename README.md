@@ -1,4 +1,4 @@
-# Phone Validation App
+# Social Lite
 
 Aplicativo Flutter desenvolvido com **GetX**, **Firebase Authentication** e **Cloud Firestore**.
 
