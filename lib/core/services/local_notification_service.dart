@@ -38,7 +38,7 @@ class LocalNotificationService {
           >()
           ?.requestExactAlarmsPermission();
     } catch (e) {
-      log('Erro ao solicitar permissão de alarmes exatos: $e');
+      rethrow;
     }
   }
 
@@ -112,7 +112,6 @@ class LocalNotificationService {
         channelDescription: _channelDesc,
         importance: Importance.max,
         priority: Priority.high,
-        styleInformation: BigTextStyleInformation(''),
       );
 
       const iosDetails = DarwinNotificationDetails(
@@ -135,7 +134,6 @@ class LocalNotificationService {
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
     } catch (e) {
-      log('Erro ao agendar notificação: $e');
       rethrow;
     }
   }
