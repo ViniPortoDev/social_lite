@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "338811456599",
+    "project_id": "phone-validation-app",
+    "storage_bucket": "phone-validation-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338811456599:android:26c9b677d702e9ebd6e712",
+        "android_client_info": {
+          "package_name": "com.example.phone_validation_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "338811456599-nehg4rploqpbfjavo03rvtrv3hc1cfl0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.phone_validation_app",
+            "certificate_hash": "8fcb9817349c764631d2aaf1b65ec416b60a674f"
+          }
+        },
+        {
+          "client_id": "338811456599-ekb7nrr2oojbq3fqecbg56v5m68s4nhb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABO1mdNRFDvoCT__VrwlUIpru3zPAzwVs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "338811456599-ekb7nrr2oojbq3fqecbg56v5m68s4nhb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
