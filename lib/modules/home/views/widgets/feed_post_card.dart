@@ -26,6 +26,13 @@ class FeedPostCard extends StatelessWidget {
         'https://picsum.photos/seed/profile-${item.user.id}/150/150';
     final fallbackPostUrl =
         'https://picsum.photos/seed/post-${item.post.id}/800/800';
+    final primaryProfileUrl =
+        item.profilePhoto.thumbnailUrl.contains('via.placeholder.com')
+        ? fallbackProfileUrl
+        : item.profilePhoto.thumbnailUrl;
+    final primaryPostUrl = item.postPhoto.url.contains('via.placeholder.com')
+        ? fallbackPostUrl
+        : item.postPhoto.url;
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -37,7 +44,7 @@ class FeedPostCard extends StatelessWidget {
             child: Row(
               children: [
                 CachedNetworkImage(
-                  imageUrl: item.profilePhoto.thumbnailUrl,
+                  imageUrl: primaryProfileUrl,
                   imageBuilder: (context, provider) => CircleAvatar(
                     radius: 18,
                     backgroundColor: scheme.primary.withValues(alpha: 0.12),
@@ -106,7 +113,7 @@ class FeedPostCard extends StatelessWidget {
           AspectRatio(
             aspectRatio: 1,
             child: CachedNetworkImage(
-              imageUrl: item.postPhoto.url,
+              imageUrl: primaryPostUrl,
               fit: BoxFit.cover,
               placeholder: (context, url) => Container(
                 color: scheme.surfaceContainerHighest,

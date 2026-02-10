@@ -156,6 +156,17 @@ class HomeController extends GetxController {
         await notificationService.showNewData(newCount: items.length);
       }
     } catch (e) {
+      final msg = e.toString();
+      if (msg.contains('HTTP 403')) {
+        dialog.showError(
+          title: 'Acesso negado (403)',
+          message:
+              'A API respondeu com acesso negado.\n\n'
+              'Isso geralmente é bloqueio de rede/proxy/firewall.\n'
+              'Tente outra rede (ou desative VPN/proxy) e tente novamente.',
+        );
+        return;
+      }
       dialog.showError(
         title: 'Erro ao carregar',
         message:

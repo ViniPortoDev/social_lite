@@ -11,74 +11,66 @@ class JsonPlaceholderService {
 
   static const _baseUrl = 'https://jsonplaceholder.typicode.com';
 
-  Future<List<PostModel>> fetchPosts({int? limit, int? start}) async {
+  Future<List<T>> _getList<T>({
+    required String path,
+    Map<String, dynamic>? queryParameters,
+    required T Function(Map<String, dynamic>) fromJson,
+  }) async {
+    final uri = '$_baseUrl$path';
     final response = await _dio.get(
-      '$_baseUrl/posts',
+      uri,
+      queryParameters: queryParameters,
+      options: Options(
+        validateStatus: (_) => true,
+        headers: {'Accept': 'application/json'},
+        responseType: ResponseType.json,
+      ),
+    );
+
+    final status = response.statusCode ?? 0;
+    if (status < 200 || status >= 300) {
+      throw Exception('HTTP $status em $uri');
+    }
+
+    final data = response.data;
+    if (data is! List) {
+      throw Exception('Resposta inesperada da API em $uri.');
+    }
+
+    return data.whereType<Map<String, dynamic>>().map(fromJson).toList();
+  }
+
+  Future<List<PostModel>> fetchPosts({int? limit, int? start}) async {
+    return _getList<PostModel>(
+      path: '/posts',
       queryParameters: {
         if (limit != null) '_limit': limit,
         if (start != null) '_start': start,
       },
+      fromJson: PostModel.fromJson,
     );
-    final data = response.data;
-
-    if (data is! List) {
-      throw Exception('Resposta inesperada da API.');
-    }
-
-    return data
-        .whereType<Map<String, dynamic>>()
-        .map(PostModel.fromJson)
-        .toList();
   }
 
   Future<List<UserModel>> fetchUsers() async {
-    final response = await _dio.get('$_baseUrl/users');
-    final data = response.data;
-
-    if (data is! List) {
-      throw Exception('Resposta inesperada da API.');
-    }
-
-    return data
-        .whereType<Map<String, dynamic>>()
-        .map(UserModel.fromJson)
-        .toList();
+    return _getList<UserModel>(path: '/users', fromJson: UserModel.fromJson);
   }
 
   Future<List<CommentModel>> fetchComments({int? limit, int? start}) async {
-    final response = await _dio.get(
-      '$_baseUrl/comments',
+    return _getList<CommentModel>(
+      path: '/comments',
       queryParameters: {
         if (limit != null) '_limit': limit,
         if (start != null) '_start': start,
       },
+      fromJson: CommentModel.fromJson,
     );
-    final data = response.data;
-
-    if (data is! List) {
-      throw Exception('Resposta inesperada da API.');
-    }
-
-    return data
-        .whereType<Map<String, dynamic>>()
-        .map(CommentModel.fromJson)
-        .toList();
   }
 
   Future<List<PhotoModel>> fetchPhotos({int limit = 200, int start = 0}) async {
-    final response = await _dio.get(
-      '$_baseUrl/photos',
+    return _getList<PhotoModel>(
+      path: '/photos',
       queryParameters: {'_limit': limit, '_start': start},
+      fromJson: PhotoModel.fromJson,
     );
-    final data = response.data;
-
-    if (data is! List) {
-      throw Exception('Resposta inesperada da API.');
-    }
-
-    return data
-        .whereType<Map<String, dynamic>>()
-        .map(PhotoModel.fromJson)
-        .toList();
   }
 }
