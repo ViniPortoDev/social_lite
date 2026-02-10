@@ -93,8 +93,8 @@ class LocalNotificationService {
 
     await _plugin.show(
       id: 1,
-      title: 'Novos dados disponíveis',
-      body: '$newCount novo(s) item(ns) carregado(s) da API.',
+      title: 'Seja bem-vindo(a)!',
+      body: '$newCount novas publicações.',
       notificationDetails: details,
     );
   }
