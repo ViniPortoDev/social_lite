@@ -37,8 +37,9 @@ class SplashView extends GetView<SplashController> {
                           children: [
                             CircleAvatar(
                               radius: 28,
-                              backgroundColor:
-                                  scheme.primary.withValues(alpha: 0.12),
+                              backgroundColor: scheme.primary.withValues(
+                                alpha: 0.12,
+                              ),
                               child: Icon(
                                 Icons.phone_iphone_rounded,
                                 color: scheme.primary,
@@ -47,18 +48,14 @@ class SplashView extends GetView<SplashController> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'Phone Validation',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge
+                              'Social Lite',
+                              style: Theme.of(context).textTheme.titleLarge
                                   ?.copyWith(fontWeight: FontWeight.w800),
                             ),
                             const SizedBox(height: 6),
                             Text(
                               'Preparando tudo pra você…',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
+                              style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(color: scheme.onSurfaceVariant),
                             ),
                             const SizedBox(height: 18),
@@ -79,8 +76,9 @@ class SplashView extends GetView<SplashController> {
                           children: [
                             CircleAvatar(
                               radius: 28,
-                              backgroundColor:
-                                  scheme.error.withValues(alpha: 0.12),
+                              backgroundColor: scheme.error.withValues(
+                                alpha: 0.12,
+                              ),
                               child: Icon(
                                 Icons.error_outline_rounded,
                                 color: scheme.error,
@@ -90,18 +88,14 @@ class SplashView extends GetView<SplashController> {
                             const SizedBox(height: 16),
                             Text(
                               'Ops…',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge
+                              style: Theme.of(context).textTheme.titleLarge
                                   ?.copyWith(fontWeight: FontWeight.w800),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               err,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
+                              style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(color: scheme.onSurfaceVariant),
                             ),
                             const SizedBox(height: 16),
